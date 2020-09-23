@@ -296,12 +296,70 @@ void AddNode(List<T> **list, Node<T>* node)
     (*list)->count++;
 }
 
+template<class T>
+void PrintList(List<T> **list)
+{
+    if(!(*list)) return;
+    int icnt = (*list)->count;
+    Node<T>* temp = (*list)->head;
+    for(int i = 0; i<icnt; i++)
+    {
+        printf("idx:%d, data:%d\n", i, temp->data);
+        temp = temp->next;
+    }
+}
+
+template<class T>
+Node<T>* FindNode(List<T> **list, T data)
+{
+    if(!(*list)) return nullptr;
+    int icnt = (*list)->count;
+    Node<T>* temp = (*list)->head;
+    for(int i = 0; i<icnt; i++)
+    {
+        if(temp->data == data)
+            return temp;
+        temp = temp->next;
+    }
+    return nullptr;
+}
+
+template<class T>
+bool DeleteNode(List<T> **list, Node<T>* node)
+{
+    if(!(*list) || !node) return false;
+    int icnt = (*list)->count;
+    Node<T>* tempfront = (*list)->head;
+    Node<T>* temp = (*list)->head;
+    for(int i =0; i<icnt; i++)
+    {
+        if(temp == node)
+        {
+            tempfront->next = temp->next;
+            delete temp;
+            temp = nullptr;
+            (*list)->count--;
+            return true;
+        }
+        else
+        {
+            tempfront = temp;
+            temp = temp->next;
+        }
+    }
+    return false;
+}
+
 int main()
 {
     List<int>* list;
     Initlist(&list);
     for(int i = 0; i< 5; i++)
         AddNode(&list, CreateNode(i));
+    bool t = DeleteNode(&list, FindNode(&list, 2));
+    t = DeleteNode(&list, FindNode(&list, 2));
+    t = DeleteNode(&list, FindNode(&list, 3));
+    PrintList(&list);
     
     while(list->count != 0)
     {
